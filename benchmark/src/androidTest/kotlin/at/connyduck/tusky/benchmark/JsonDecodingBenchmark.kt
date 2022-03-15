@@ -55,15 +55,11 @@ class JsonDecodingBenchmark {
 
         val br = BufferedReader(InputStreamReader(this.javaClass.classLoader!!.getResourceAsStream("test.json")))
 
-        try {
-            var line: String? = br.readLine()
-            while (line != null) {
-                sb.append(line)
-                sb.append('\n')
-                line = br.readLine()
-            }
-        } catch (e: IOException) {
-            Log.w("LicenseActivity", e)
+        var line: String? = br.readLine()
+        while (line != null) {
+            sb.append(line)
+            sb.append('\n')
+            line = br.readLine()
         }
 
         br.close()
