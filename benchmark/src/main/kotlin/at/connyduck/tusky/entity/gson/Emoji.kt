@@ -1,4 +1,4 @@
-/* Copyright 2017 Andrew Dawson
+/* Copyright 2018 Conny Duck
  *
  * This file is a part of Tusky.
  *
@@ -13,37 +13,16 @@
  * You should have received a copy of the GNU General Public License along with Tusky; if not,
  * see <http://www.gnu.org/licenses>. */
 
-package at.connyduck.tusky.entity
+package at.connyduck.tusky.entity.gson
 
-import android.text.Spanned
+import android.os.Parcelable
 import com.google.gson.annotations.SerializedName
+import kotlinx.parcelize.Parcelize
 
-data class Card(
+@Parcelize
+data class Emoji(
+    val shortcode: String,
     val url: String,
-    val title: Spanned,
-    val description: Spanned,
-    @SerializedName("author_name") val authorName: String,
-    val image: String,
-    val type: String,
-    val width: Int,
-    val height: Int,
-    val blurhash: String?,
-    val embed_url: String?
-) {
-
-    override fun hashCode(): Int {
-        return url.hashCode()
-    }
-
-    override fun equals(other: Any?): Boolean {
-        if (other !is Card) {
-            return false
-        }
-        val account = other as Card?
-        return account?.url == this.url
-    }
-
-    companion object {
-        const val TYPE_PHOTO = "photo"
-    }
-}
+    @SerializedName("static_url") val staticUrl: String,
+    @SerializedName("visible_in_picker") val visibleInPicker: Boolean?
+) : Parcelable

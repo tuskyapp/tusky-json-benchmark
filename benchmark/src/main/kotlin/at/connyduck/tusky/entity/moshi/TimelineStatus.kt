@@ -13,31 +13,32 @@
  * You should have received a copy of the GNU General Public License along with Tusky; if not,
  * see <http://www.gnu.org/licenses>. */
 
-package at.connyduck.tusky.entity
+package at.connyduck.tusky.entity.moshi
 
-import android.text.Spanned
-import com.google.gson.annotations.SerializedName
+import com.squareup.moshi.Json
+import com.squareup.moshi.JsonClass
 import java.util.Date
 
+@JsonClass(generateAdapter = true)
 data class TimelineStatus(
     val id: String,
     val url: String?, // not present if it's reblog
     val account: TimelineAccount,
-    @SerializedName("in_reply_to_id") var inReplyToId: String?,
-    @SerializedName("in_reply_to_account_id") val inReplyToAccountId: String?,
+    @Json(name = "in_reply_to_id") var inReplyToId: String?,
+    @Json(name = "in_reply_to_account_id") val inReplyToAccountId: String?,
     val reblog: TimelineStatus?,
-    val content: Spanned,
-    @SerializedName("created_at") val createdAt: Date,
+    val content: String,
+    @Json(name = "created_at") val createdAt: Date,
     val emojis: List<Emoji>,
-    @SerializedName("reblogs_count") val reblogsCount: Int,
-    @SerializedName("favourites_count") val favouritesCount: Int,
+    @Json(name = "reblogs_count") val reblogsCount: Int,
+    @Json(name = "favourites_count") val favouritesCount: Int,
     var reblogged: Boolean,
     var favourited: Boolean,
     var bookmarked: Boolean,
     var sensitive: Boolean,
-    @SerializedName("spoiler_text") val spoilerText: String,
+    @Json(name = "spoiler_text") val spoilerText: String,
     val visibility: Visibility,
-    @SerializedName("media_attachments") var attachments: ArrayList<Attachment>,
+    @Json(name = "media_attachments") var attachments: List<Attachment>,
     val mentions: List<Mention>,
     val tags: List<HashTag>?,
     val application: Application?,
@@ -46,25 +47,24 @@ data class TimelineStatus(
     val poll: Poll?,
     val card: Card?
 ) {
+    @JsonClass(generateAdapter = false)
      enum class Visibility(val num: Int) {
-         UNKNOWN(0),
-         @SerializedName("public")
-         PUBLIC(1),
-         @SerializedName("unlisted")
-         UNLISTED(2),
-         @SerializedName("private")
-         PRIVATE(3),
-         @SerializedName("direct")
-         DIRECT(4);
+        @Json(name = "unknown") UNKNOWN(0),
+        @Json(name = "public") PUBLIC(1),
+        @Json(name = "unlisted") UNLISTED(2),
+        @Json(name = "private") PRIVATE(3),
+        @Json(name = "direct") DIRECT(4);
      }
 
+    @JsonClass(generateAdapter = true)
     data class Mention(
         val id: String,
         val url: String,
-        @SerializedName("acct") val username: String,
-        @SerializedName("username") val localUsername: String
+        @Json(name = "acct") val username: String,
+        @Json(name = "username") val localUsername: String
     )
 
+    @JsonClass(generateAdapter = true)
     data class Application(
         val name: String,
         val website: String?

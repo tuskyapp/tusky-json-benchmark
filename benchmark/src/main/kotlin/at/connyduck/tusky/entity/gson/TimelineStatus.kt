@@ -13,20 +13,26 @@
  * You should have received a copy of the GNU General Public License along with Tusky; if not,
  * see <http://www.gnu.org/licenses>. */
 
-package at.connyduck.tusky.entity
+package at.connyduck.tusky.entity.gson
 
-import android.text.Spanned
+import at.connyduck.tusky.entity.moshi.Attachment
+import at.connyduck.tusky.entity.moshi.Card
+import at.connyduck.tusky.entity.moshi.Emoji
+import at.connyduck.tusky.entity.moshi.HashTag
+import at.connyduck.tusky.entity.moshi.Poll
+import at.connyduck.tusky.entity.moshi.TimelineAccount
+import at.connyduck.tusky.entity.moshi.TimelineStatus
 import com.google.gson.annotations.SerializedName
 import java.util.Date
 
-data class FullStatus(
+data class TimelineStatus(
     val id: String,
     val url: String?, // not present if it's reblog
-    val account: Account,
+    val account: TimelineAccount,
     @SerializedName("in_reply_to_id") var inReplyToId: String?,
     @SerializedName("in_reply_to_account_id") val inReplyToAccountId: String?,
-    val reblog: FullStatus?,
-    val content: Spanned,
+    val reblog: TimelineStatus?,
+    val content: String,
     @SerializedName("created_at") val createdAt: Date,
     val emojis: List<Emoji>,
     @SerializedName("reblogs_count") val reblogsCount: Int,

@@ -13,59 +13,39 @@
  * You should have received a copy of the GNU General Public License along with Tusky; if not,
  * see <http://www.gnu.org/licenses>. */
 
-package at.connyduck.tusky.entity
+package at.connyduck.tusky.entity.moshi
 
 import android.os.Parcelable
-import com.google.gson.JsonDeserializationContext
-import com.google.gson.JsonDeserializer
-import com.google.gson.JsonElement
-import com.google.gson.JsonParseException
-import com.google.gson.annotations.JsonAdapter
-import com.google.gson.annotations.SerializedName
+import com.squareup.moshi.Json
+import com.squareup.moshi.JsonClass
 import kotlinx.parcelize.Parcelize
 
 @Parcelize
+@JsonClass(generateAdapter = true)
 data class Attachment(
     val id: String,
     val url: String,
-    @SerializedName("preview_url") val previewUrl: String?, // can be null for e.g. audio attachments
+    @Json(name = "preview_url") val previewUrl: String?, // can be null for e.g. audio attachments
     val meta: MetaData?,
     val type: Type,
     val description: String?,
     val blurhash: String?
 ) : Parcelable {
 
-    @JsonAdapter(MediaTypeDeserializer::class)
+    @JsonClass(generateAdapter = false)
     enum class Type {
-        @SerializedName("image")
-        IMAGE,
-        @SerializedName("gifv")
-        GIFV,
-        @SerializedName("video")
-        VIDEO,
-        @SerializedName("audio")
-        AUDIO,
-        @SerializedName("unknown")
-        UNKNOWN
-    }
-
-    class MediaTypeDeserializer : JsonDeserializer<Type> {
-        @Throws(JsonParseException::class)
-        override fun deserialize(json: JsonElement, classOfT: java.lang.reflect.Type, context: JsonDeserializationContext): Type {
-            return when (json.toString()) {
-                "\"image\"" -> Type.IMAGE
-                "\"gifv\"" -> Type.GIFV
-                "\"video\"" -> Type.VIDEO
-                "\"audio\"" -> Type.AUDIO
-                else -> Type.UNKNOWN
-            }
-        }
+        @Json(name = "image") IMAGE,
+        @Json(name = "gifv") GIFV,
+        @Json(name = "video") VIDEO,
+        @Json(name = "audio") AUDIO,
+        @Json(name = "unknown") UNKNOWN
     }
 
     /**
      * The meta data of an [Attachment].
      */
     @Parcelize
+    @JsonClass(generateAdapter = true)
     data class MetaData(
         val focus: Focus?,
         val duration: Float?
@@ -78,6 +58,7 @@ data class Attachment(
      *   https://github.com/jonom/jquery-focuspoint#1-calculate-your-images-focus-point
      */
     @Parcelize
+    @JsonClass(generateAdapter = true)
     data class Focus(
         val x: Float,
         val y: Float

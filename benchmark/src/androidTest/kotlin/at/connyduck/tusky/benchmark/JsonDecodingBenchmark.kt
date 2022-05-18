@@ -1,21 +1,20 @@
 package at.connyduck.tusky.benchmark
 
-import android.text.Spanned
-import android.util.Log
 import androidx.benchmark.junit4.BenchmarkRule
 import androidx.benchmark.junit4.measureRepeated
 import androidx.test.ext.junit.runners.AndroidJUnit4
-import at.connyduck.tusky.entity.FullStatus
-import at.connyduck.tusky.entity.TimelineStatus
-import at.connyduck.tusky.json.SpannedTypeAdapter
-import com.google.gson.GsonBuilder
+import at.connyduck.tusky.entity.gson.TimelineStatus
+import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
+import com.squareup.moshi.Moshi
+import com.squareup.moshi.adapter
+import com.squareup.moshi.adapters.Rfc3339DateJsonAdapter
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 import java.io.BufferedReader
-import java.io.IOException
 import java.io.InputStreamReader
+import java.util.*
 
 /**
  * Benchmark, which will execute on an Android device.
@@ -26,9 +25,11 @@ import java.io.InputStreamReader
 @RunWith(AndroidJUnit4::class)
 class JsonDecodingBenchmark {
 
-    private val gson = GsonBuilder().registerTypeAdapter(
-        Spanned::class.java, SpannedTypeAdapter()
-    ).create()
+    private val gson = Gson()
+
+    private val moshi = Moshi.Builder()
+        .add(Date::class.java, Rfc3339DateJsonAdapter())
+        .build()
 
     private val testData = loadTestData()
 
@@ -36,16 +37,17 @@ class JsonDecodingBenchmark {
     val benchmarkRule = BenchmarkRule()
 
     @Test
-    fun decodeWithGson_Full() {
+    fun decodeWithGson() {
         benchmarkRule.measureRepeated {
-            val statusList: List<FullStatus> = gson.fromJson(testData, object : TypeToken<List<FullStatus>>() {}.type)
+            val statusList: List<TimelineStatus> = gson.fromJson(testData, object : TypeToken<List<TimelineStatus>>() {}.type)
         }
     }
 
     @Test
-    fun decodeWithGson_Timeline() {
+    @ExperimentalStdlibApi
+    fun decodeWithMoshi() {
         benchmarkRule.measureRepeated {
-            val statusList: List<TimelineStatus> = gson.fromJson(testData, object : TypeToken<List<TimelineStatus>>() {}.type)
+            val statusList: List<at.connyduck.tusky.entity.moshi.TimelineStatus>? = moshi.adapter<List<at.connyduck.tusky.entity.moshi.TimelineStatus>>().fromJson(testData)
         }
     }
 

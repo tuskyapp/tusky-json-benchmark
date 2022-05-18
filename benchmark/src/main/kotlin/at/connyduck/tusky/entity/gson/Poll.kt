@@ -1,5 +1,6 @@
-package at.connyduck.tusky.entity
+package at.connyduck.tusky.entity.gson
 
+import at.connyduck.tusky.entity.moshi.PollOption
 import com.google.gson.annotations.SerializedName
 import java.util.Date
 
