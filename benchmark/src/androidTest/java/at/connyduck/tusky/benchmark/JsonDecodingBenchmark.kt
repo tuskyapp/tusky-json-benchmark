@@ -4,7 +4,8 @@ import androidx.benchmark.junit4.BenchmarkRule
 import androidx.benchmark.junit4.measureRepeated
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import at.connyduck.tusky.entity.gson.TimelineStatus
-import com.google.gson.Gson
+import at.connyduck.tusky.json.UtcDateTypeAdapter
+import com.google.gson.GsonBuilder
 import com.google.gson.reflect.TypeToken
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.adapter
@@ -25,7 +26,9 @@ import java.util.*
 @RunWith(AndroidJUnit4::class)
 class JsonDecodingBenchmark {
 
-    private val gson = Gson()
+    private val gson = GsonBuilder()
+        .registerTypeAdapter(Date::class.java, UtcDateTypeAdapter())
+        .create()
 
     private val moshi = Moshi.Builder()
         .add(Date::class.java, Rfc3339DateJsonAdapter())

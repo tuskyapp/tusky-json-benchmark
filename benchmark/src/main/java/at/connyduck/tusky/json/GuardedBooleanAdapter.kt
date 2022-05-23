@@ -13,7 +13,7 @@
  * You should have received a copy of the GNU General Public License along with Tusky; if not,
  * see <http://www.gnu.org/licenses>. */
 
-package com.keylesspalace.tusky.json
+package at.connyduck.tusky.json
 
 import com.google.gson.JsonDeserializationContext
 import com.google.gson.JsonDeserializer
